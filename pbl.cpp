@@ -408,7 +408,7 @@ void xuat_ra_file(SV a[]){
     int n;
     char r='0';
     fscanf(p,"%d",&n);
-    filename[7]=r+n;
+    filename[7]=r+n+1;
     fclose(p);
     p=fopen("E:\\lop.txt","w");
     fprintf(p,"%d",n+1);
@@ -418,14 +418,18 @@ void xuat_ra_file(SV a[]){
     fprintf(fp,"%-118s\n"," ____________________________________________________________________________________________________________________");
     fprintf(fp,"%-118s\n","| STT |       Ho Va Ten       | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |");
     for(int i=0;i<m;i++){
-             printf("%2s%3d%2s","| ",i," |");
-             fprintf(fp,"%11%-12s%1s",a[i].hovaten.ho_lot,,a[i].hovaten.ten,"|");
-             fprintf(fp,"%-10s%1s",a[i].gioi_tinh,"|");
-             fprintf(fp,"%-10s%1s",a[i].ngay_sinh,"|");
-             fprintf(fp,"%-17s%1s",a[i].dia_chi,"|");
-             fprintf(fp,"%-13s%1s",a[i].ma_sinh_vien,"|");
-             fprintf(fp,"%-27s%1s\n",a[i].email,"|");
+    	     fprintf(fp,"%c",'|');
+             fprintf(fp,"%2s%-3d","  ",i);
+             fprintf(fp,"%c",'|');
+             fprintf(fp,"%10s%c%-12s%c",a[i].hovaten.ho_lot,' ',a[i].hovaten.ten,'|');
+             fprintf(fp,"%3s%-8s%c","   ",a[i].gioi_tinh,'|');
+             fprintf(fp,"%3s%-8s%c","   ",a[i].ngay_sinh,'|');
+             fprintf(fp,"%5s%-13s%c","     ",a[i].dia_chi,'|');
+             fprintf(fp,"%3s%-11s%c","   ",a[i].ma_sinh_vien,'|');
+             fprintf(fp,"%5s%-23s%c\n","     ",a[i].email,'|');
         }
+    fprintf(fp,"%-118s"," --------------------------------------------------------------------------------------------------------------------");    
     fclose(fp);
 }
+
 
