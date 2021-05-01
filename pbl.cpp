@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<string.h>
 #include <conio.h>
+bool check_find=false;
+int chot;
 int m=0;
 struct ho_va_ten{
     char ho_lot[10];
@@ -208,44 +210,17 @@ bool kiem_tra_Du_Lieu(char can_xoa[]){
     else return false;
 }
 void xoa_sinh_vien(SV a[]){
-    char can_xoa[50];
-    printf("Hay Nhap Ma Sinh Vien Hoac Ho Va Ten Cua Sinh Vien Can Xoa: ");
-    fflush(stdin);
-    gets(can_xoa);
-    int i=0;
-    char hovaten[20];
-    char b[2]={' '};
-	strcpy(hovaten, a[0].hovaten.ho_lot);
-    strcat(hovaten,b);
-    strcat(hovaten, a[0].hovaten.ten);
-    if(kiem_tra_Du_Lieu(can_xoa)==false){ 
-    while(i<m&&strcmpi(hovaten,can_xoa)!=0) {
-       i++;
-       strcpy(hovaten, a[i].hovaten.ho_lot);
-       strcat(hovaten,b);
-       strcat(hovaten, a[i].hovaten.ten); 
-    }
-    }else {
-        while(i<m&&strcmpi(a[i].ma_sinh_vien,can_xoa)!=0) i++;
-    }
-    if(i==m){
-        printf("\nKhong Co Sinh Vien Nay Trong Lop");
-
-    }
-    else {
-        printf("Ho Va Ten Cua Sinh vien la: %s %s",a[i].hovaten.ho_lot,a[i].hovaten.ten);
-        printf("\nGioi Tinh Cua Sinh Vien La: %s",a[i].gioi_tinh);
-        printf("\nNgay Sinh Cua Sinh Vien La: %s",a[i].ngay_sinh);
-        printf("\nDia Chi Cua Sinh Vien La: %s",a[i].dia_chi);
-        printf("\nEmail: %s",a[i].email);
+    tim_sinh_vien(a);
+    if(check_find=true){
+	
         printf("Day co Phai Sinh Vien Ban Can Xoa Hay Khong ? C/K:");
         char key;
         scanf("%c",&key);
         if(key=='c'||key=='C'){
-           for(int j=i+1;j<m;j++) a[j-1]=a[j];
+           for(int j=chot+1;j<m;j++) a[j-1]=a[j];
            m--;
         }
-        
+        check_find=false;
          }
 }
 
@@ -280,9 +255,12 @@ void tim_sinh_vien(SV a[]){
         printf("\nNgay Sinh Cua Sinh Vien La: %s",a[i].ngay_sinh);
         printf("\nDia Chi Cua Sinh Vien La: %s",a[i].dia_chi);
         printf("\nEmail: %s",a[i].email);
+        check_find=true;
+        chot=i;
         }
         
          }
+      
 
 void swap(SV &a,SV &b){
     
