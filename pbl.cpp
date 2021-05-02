@@ -245,7 +245,7 @@ void tim_sinh_vien(SV a[]){
     }else {
         while(i<m&&strcmpi(a[i].ma_sinh_vien,can_xoa)!=0) i++;
     }
-    if(i==m){
+    if(i==m&&i!=0){
         printf("\nKhong Co Sinh Vien Nay Trong Lop");
 
     }
@@ -254,7 +254,7 @@ void tim_sinh_vien(SV a[]){
         printf("\nGioi Tinh Cua Sinh Vien La: %s",a[i].gioi_tinh);
         printf("\nNgay Sinh Cua Sinh Vien La: %s",a[i].ngay_sinh);
         printf("\nDia Chi Cua Sinh Vien La: %s",a[i].dia_chi);
-        printf("\nEmail: %s",a[i].email);
+        printf("\nEmail: %s\n",a[i].email);
         check_find=true;
         chot=i;
         }
