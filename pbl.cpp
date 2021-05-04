@@ -2,15 +2,30 @@
 #include<stdlib.h>
 #include<string.h>
 #include <conio.h>
+/* check_find kiem tra xem co tim thay sinh vien Khong
+neu thay tra ve true nguoc lai tra ve false*/
 bool check_find=false;
+/* bien chot dung de giu vi tri phan tu can xoa */
 int chot;
+/* bien m dung de luu tru so sinh vien cos trong lop */
 int m=0;
+/* da_nhap dung de kiem tra xem da nhap du lieu ban dau chua
+neu chua tra ve false nguoc lai tra ve true */
+bool da_nhap=false;
+/* kiem_tra_sap_xep dung de kiem tra xem danh sach da duoc sap xep chua 
+neu chua tra ve false nguoc lai tra ve true */
+bool kiem_tra_sap_xep=false;
+/* kiem_tra_cap_ma_sinh_vien dung de kiem tra xem da cap ma sinh vien chua 
+neu chua tra ve false nguoc lai tra ve true */
+bool kiem_tra_cap_ma_sinh_vien=false;
+/* kieu struct de luu tru ho_lot va ten cua sinh vien*/
 struct ho_va_ten{
     char ho_lot[10];
     char ten[10];
 
 };
-struct Sinh_Vien{     // dùng mang song song du luu thông tin sinh viên
+/*  dung kieu struct de luu tru thong tin cua sinh vien */
+struct Sinh_Vien{    
     ho_va_ten hovaten;
     char gioi_tinh[5];
     char ngay_sinh[11];
@@ -19,27 +34,24 @@ struct Sinh_Vien{     // dùng mang song song du luu thông tin sinh viên
     char email[23];
 };
 typedef  Sinh_Vien SV; 
-void them_sinh_vien_buoc1(SV a[],int so_sinh_vien_can_them);
-void them_sinh_vien_buoc2(SV &sv);
-void quickSort_ho_lot(SV a[],int low, int high);
-int tim_vi_tri_phan_tu_chot_ho_lot(SV a[],int low,int high);
-void sap_xep_theo_ho_lot(SV a[]);
-void quickSort_ten(SV a[], int low, int high);
-void swap(SV &a,SV &b);
-int tim_vi_tri_phan_tu_chot_ten(SV a[], int low, int high);
-void xoa_sinh_vien(SV a[]);
-void tim_sinh_vien(SV a[]);
-void cap_ma_sinh_vien(SV a[]);
-void cap_email(SV a[]);
-void in_danh_sach_buoc1(SV a[]);
-void in_danh_sach_buoc2(SV sv);
-bool kiem_tra_Du_Lieu(char can_xoa[]);
-void xuat_ra_file(SV a[]);
-
+void them_sinh_vien_step1(SV a[],int so_sinh_vien_can_them); // ham them sinh vien step 1
+void them_sinh_vien_step2(SV &sv); // ham them sinh vien step 2
+void quickSort_ho_lot_step2(SV a[],int low, int high);  // sap xep danh sach theo ho lot dung thuat toan quickSort step 2
+int quickSort_ho_lot_step3(SV a[],int low,int high); //  sap xep danh sach theo ho lot dung thuat toan quickSort step 3
+void quickSort_ho_lot_step1(SV a[]);//  sap xep danh sach theo ho lot dung thuat toan quickSort step 1
+void quickSort_ten_step1(SV a[], int low, int high);//  sap xep danh sach theo ten dung thuat toan quickSort step 1
+void swap(SV &a,SV &b); // ham dung hoan doi vi tri 2 sinh vien
+int quickSort_ten_step2(SV a[], int low, int high); //  sap xep danh sach theo ho lot dung thuat toan quickSort step 2
+void xoa_sinh_vien(SV a[]); // ham dung de xoa mot sinh vien theo ten hoac ma sinh vien
+void tim_sinh_vien(SV a[]);// ham dung de tim mot sinh vien theo ten hoac ma sinh vien
+void cap_ma_sinh_vien(SV a[]);// ham dung de cap ma cho sinh vien
+void cap_email(SV a[]); // ham dung de email co sinh vien
+void in_danh_sach_step1(SV a[]); // ham in danh sach step 1 
+void in_danh_sach_step2(SV sv);// ham in danh sach step 2
+bool kiem_tra_Du_Lieu(char can_xoa[]);  // ham kiem tra du lieu dau vao xem nhap ten sinh vien hay ma sinh vien
+void xuat_ra_file(SV a[]);// ham xuat danh sach ra file khi ket thuc chuong trinh
+// ham main
 int main(){
-	bool da_nhap=false;
-	bool kiem_tra_sap_xep=false;
-	bool kiem_tra_cap_ma_sinh_vien=false;
 	SV a[100];
     while(true){
     system("cls");    
@@ -64,32 +76,33 @@ int main(){
     	case 1: {
     		printf("Ban Da Chon Nhap Sinh Vien\n");
             printf("Nhap So Sinh Vien Can Them:");
+            // so_sinh_vien_can_them de nhap so sinh vien maf ban can them
             int so_sinh_vien_can_them;
             scanf("%d",&so_sinh_vien_can_them);
             printf("\n");
-            them_sinh_vien_buoc1(a,so_sinh_vien_can_them);
+            them_sinh_vien_step1(a,so_sinh_vien_can_them);
             da_nhap=true;
             printf("\n\nBan Da Nhap Xong Thong Tin!");
 			break;
 		}
     	case 2: {		
             if(da_nhap==true){
-            	printf("Ban Da Chon Sap Xep Danh Sach Sinh Vien\n");
+            	    printf("Ban Da Chon Sap Xep Danh Sach Sinh Vien\n");
                     kiem_tra_sap_xep=true;
-                    quickSort_ten(a,0,m-1);
-                sap_xep_theo_ho_lot(a);
+                    quickSort_ten_step1(a,0,m-1);
+                    quickSort_ho_lot_step1(a);
                     printf("\n\nBan Da Sap Xep!");
                     getch();
                     break;
-        }
+            }
         
             else {
                     printf("Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
                     getch();
                     break;
-        }
+            }
       
-		break;    }
+	    }
     	case 3: {
             
             if(da_nhap==true){
@@ -150,7 +163,7 @@ int main(){
             }
 		}
     	case 7: {
-    		in_danh_sach_buoc1(a);
+    		in_danh_sach_step1(a);
     		getch();
 			break;
 		}
@@ -169,7 +182,7 @@ int main(){
 	
    
 }
-void them_sinh_vien_buoc2(SV &sv){
+void them_sinh_vien_step2(SV &sv){
 	printf("Hay Nhap Ho Lot Cua Sinh Vien:"); fflush(stdin);
     gets(sv.hovaten.ho_lot);
     printf("\nHay Nhap Ten Cua Sinh Vien:");
@@ -179,24 +192,24 @@ void them_sinh_vien_buoc2(SV &sv){
     printf("\nHay Nhap Dia Chi Cua Sinh Vien:");   gets(sv.dia_chi);
     printf("\n\n\n");
 }
-void them_sinh_vien_buoc1(SV a[],int so_sinh_vien_can_them){
+void them_sinh_vien_step1(SV a[],int so_sinh_vien_can_them){
     for(int i=0;i<so_sinh_vien_can_them;i++){
         printf("Ban Hay Nhap Thong Tin Cua Sinh Vien: %d\n",m);
-        them_sinh_vien_buoc2(a[m]);
+        them_sinh_vien_step2(a[m]);
         m++;
 
     }
 }
-void in_danh_sach_buoc1(SV a[]){
+void in_danh_sach_step1(SV a[]){
     printf(" ____________________________________________________________________________________________________________________\n");
     printf("| STT |       Ho Va Ten       | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |\n");
     for(int i=0;i<m;i++){
       printf("| %3d |",i);
-      in_danh_sach_buoc2(a[i]);
+      in_danh_sach_step2(a[i]);
     }
     printf(" --------------------------------------------------------------------------------------------------------------------");
 }
-void in_danh_sach_buoc2(SV sv){
+void in_danh_sach_step2(SV sv){
     printf("%10s %-12s|",sv.hovaten.ho_lot,sv.hovaten.ten);
     printf(" %-10s|",sv.gioi_tinh);
     printf(" %-10s|",sv.ngay_sinh);
@@ -211,7 +224,7 @@ bool kiem_tra_Du_Lieu(char can_xoa[]){
 }
 void xoa_sinh_vien(SV a[]){
     tim_sinh_vien(a);
-    if(check_find=true){
+    if(check_find==true){
 	
         printf("Day co Phai Sinh Vien Ban Can Xoa Hay Khong ? C/K:");
         char key;
@@ -220,9 +233,10 @@ void xoa_sinh_vien(SV a[]){
            for(int j=chot+1;j<m;j++) a[j-1]=a[j];
            m--;
         }
-        check_find=false;
-         }
-}
+        
+    }
+    
+}    
 
 void tim_sinh_vien(SV a[]){
     char can_xoa[50];
@@ -231,22 +245,25 @@ void tim_sinh_vien(SV a[]){
     gets(can_xoa);
     int i=0;
     char hovaten[20];
+    /* thuc hien viec ghep ten va ho lot de tim kiem*/
     char b[2]={' '};
 	strcpy(hovaten, a[0].hovaten.ho_lot);
     strcat(hovaten,b);
     strcat(hovaten, a[0].hovaten.ten);
     if(kiem_tra_Du_Lieu(can_xoa)==false){ 
-    while(i<m&&strcmpi(hovaten,can_xoa)!=0) {
-       i++;
-       strcpy(hovaten, a[i].hovaten.ho_lot);
-       strcat(hovaten,b);
-       strcat(hovaten, a[i].hovaten.ten); 
+          while(i<m&&strcmpi(hovaten,can_xoa)!=0) {
+                 i++;
+                strcpy(hovaten, a[i].hovaten.ho_lot);
+                strcat(hovaten,b);
+                strcat(hovaten, a[i].hovaten.ten); 
+             }
     }
-    }else {
+    else {
         while(i<m&&strcmpi(a[i].ma_sinh_vien,can_xoa)!=0) i++;
     }
     if(i==m&&i!=0){
         printf("\nKhong Co Sinh Vien Nay Trong Lop");
+        check_find=false;
 
     }
     else {
@@ -257,18 +274,18 @@ void tim_sinh_vien(SV a[]){
         printf("\nEmail: %s\n",a[i].email);
         check_find=true;
         chot=i;
-        }
+    }
         
-         }
+}
       
 
 void swap(SV &a,SV &b){
-    
-    SV c = a;
+    SV c;    
+    c = a;
     a = b;
     b = c;
 }
-int tim_vi_tri_phan_tu_chot_ten(SV a[], int low, int high)
+int quickSort_ten_step2(SV a[], int low, int high)
 {
     
     char pivot =a[high].hovaten.ten[0];     // pivot
@@ -287,26 +304,27 @@ int tim_vi_tri_phan_tu_chot_ten(SV a[], int low, int high)
     swap(a[left], a[high]);
     return left;
 }
-void quickSort_ten(SV a[], int low, int high)
+void quickSort_ten_step1(SV a[], int low, int high)
 {
     if (low < high)
-    {
-        int pi = tim_vi_tri_phan_tu_chot_ten(a, low, high);
-        quickSort_ten(a, low, pi - 1);
-        quickSort_ten(a, pi + 1, high);
+    {   // bien pi luu tru vi tri phan tu chia mang ra 2 mang con
+        int pi=quickSort_ten_step2(a, low, high);
+        quickSort_ten_step1(a,low,pi-1);
+        quickSort_ten_step1(a,pi+1,high);
     }
 }
-void quickSort_ho_lot(SV a[],int low,int high){
+void quickSort_ho_lot_step2(SV a[],int low,int high){
     if(low<high){
-        int pi=tim_vi_tri_phan_tu_chot_ho_lot(a,low,high);
-        quickSort_ho_lot(a, low,pi-1);
-        quickSort_ho_lot(a,pi+1,high);
+        // bien pi luu tru vi tri phan tu chia mang ra 2 mang con
+        int pi=quickSort_ho_lot_step3(a,low,high);
+        quickSort_ho_lot_step2(a,low,pi-1);
+        quickSort_ho_lot_step2(a,pi+1,high);
     }
 }
-int tim_vi_tri_phan_tu_chot_ho_lot(SV a[], int low, int high)
+int quickSort_ho_lot_step3(SV a[], int low, int high)
 {
-    
-    char pivot =a[high].hovaten.ho_lot[0];     // pivot
+    // pivot con phan tu cuoi lam chot
+    char pivot =a[high].hovaten.ho_lot[0];     
     int left = low;
     int right = high - 1;
     while(true){
@@ -322,14 +340,14 @@ int tim_vi_tri_phan_tu_chot_ho_lot(SV a[], int low, int high)
     swap(a[left], a[high]);
     return left;
 }
-void sap_xep_theo_ho_lot(SV a[]){
+void quickSort_ho_lot_step1(SV a[]){
     int bien_trung_gian=0;
     char b=a[0].hovaten.ten[0];
     for(int i=1;i<m;i++){
         if(b!=a[i].hovaten.ten[0])
         {
-            quickSort_ho_lot(a,bien_trung_gian,i-1);
-            bien_trung_gian=i;
+            quickSort_ho_lot_step2(a,bien_trung_gian,i-1);
+            bien_trung_gian=i;  
             b=a[i].hovaten.ten[0];
         }
 
@@ -376,19 +394,19 @@ void cap_email(SV a[]){
     strcat(a[i].email, b);
 
 
-}
+    }
 }
 void xuat_ra_file(SV a[]){
     FILE *fp;
     char filename[13]="dssvlop .txt";
     FILE *p;
-    p=fopen("E:\\lop.txt","r");
+    p=fopen("E:\\github\\lop.txt","r");
     int n;
     char r='0';
     fscanf(p,"%d",&n);
     filename[7]=r+n+1;
     fclose(p);
-    p=fopen("E:\\lop.txt","w");
+    p=fopen("E:\\github\\lop.txt","w");
     fprintf(p,"%d",n+1);
     fclose(p);
     fp=fopen(filename,"w");
@@ -409,5 +427,6 @@ void xuat_ra_file(SV a[]){
     fprintf(fp,"%-118s"," --------------------------------------------------------------------------------------------------------------------");    
     fclose(fp);
 }
+/* Do An Quan Li Hoc Sinh */
 
 
