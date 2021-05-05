@@ -20,7 +20,7 @@ neu chua tra ve false nguoc lai tra ve true */
 bool kiem_tra_cap_ma_sinh_vien=false;
 /* kieu struct de luu tru ho_lot va ten cua sinh vien*/
 struct ho_va_ten{
-    char ho_lot[10];
+    char ho_lot[15];
     char ten[10];
 
 };
@@ -76,7 +76,7 @@ int main(){
     	case 1: {
     		printf("Ban Da Chon Nhap Sinh Vien\n");
             printf("Nhap So Sinh Vien Can Them:");
-            // so_sinh_vien_can_them de nhap so sinh vien maf ban can them
+            // so_sinh_vien_can_them de nhap so sinh vien ma ban can them
             int so_sinh_vien_can_them;
             scanf("%d",&so_sinh_vien_can_them);
             printf("\n");
@@ -201,16 +201,16 @@ void them_sinh_vien_step1(SV a[],int so_sinh_vien_can_them){
     }
 }
 void in_danh_sach_step1(SV a[]){
-    printf(" ____________________________________________________________________________________________________________________\n");
-    printf("| STT |       Ho Va Ten       | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |\n");
+    printf(" _______________________________________________________________________________________________________________________\n");
+    printf("| STT |        Ho Va Ten         | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |\n");
     for(int i=0;i<m;i++){
       printf("| %3d |",i);
       in_danh_sach_step2(a[i]);
     }
-    printf(" --------------------------------------------------------------------------------------------------------------------");
+    printf(" -----------------------------------------------------------------------------------------------------------------------");
 }
 void in_danh_sach_step2(SV sv){
-    printf("%10s %-12s|",sv.hovaten.ho_lot,sv.hovaten.ten);
+    printf("%15s %-10s|",sv.hovaten.ho_lot,sv.hovaten.ten);
     printf(" %-10s|",sv.gioi_tinh);
     printf(" %-10s|",sv.ngay_sinh);
     printf(" %-17s|",sv.dia_chi);
@@ -288,13 +288,15 @@ void swap(SV &a,SV &b){
 int quickSort_ten_step2(SV a[], int low, int high)
 {
     
-    char pivot =a[high].hovaten.ten[0];     // pivot
+    char pivot[10];
+    strcpy(pivot, a[high].hovaten.ten);
+         // pivot
     int left = low;
     int right = high - 1;
     while(true){
-        while(left <= right&&pivot>a[left].hovaten.ten[0])
+        while(left <= right&&strcmp(pivot,a[left].hovaten.ten)>0)
              left++;
-        while(right >= left&&pivot<a[right].hovaten.ten[0])
+        while(right >= left&&strcmp(pivot,a[right].hovaten.ten)<0)
              right--;
         if (left >= right) break;
         swap(a[left], a[right]);
@@ -313,24 +315,19 @@ void quickSort_ten_step1(SV a[], int low, int high)
         quickSort_ten_step1(a,pi+1,high);
     }
 }
-void quickSort_ho_lot_step2(SV a[],int low,int high){
-    if(low<high){
-        // bien pi luu tru vi tri phan tu chia mang ra 2 mang con
-        int pi=quickSort_ho_lot_step3(a,low,high);
-        quickSort_ho_lot_step2(a,low,pi-1);
-        quickSort_ho_lot_step2(a,pi+1,high);
-    }
-}
+
 int quickSort_ho_lot_step3(SV a[], int low, int high)
 {
     // pivot con phan tu cuoi lam chot
-    char pivot =a[high].hovaten.ho_lot[0];     
+    char pivot[15];
+    strcpy(pivot, a[high].hovaten.ho_lot);
+
     int left = low;
     int right = high - 1;
     while(true){
-        while(left <= right&&pivot>a[left].hovaten.ho_lot[0])
+        while(left <= right&&strcmp(pivot, a[left].hovaten.ho_lot)>0)
              left++;
-        while(right >= left&&pivot<a[right].hovaten.ho_lot[0])
+        while(right >= left&&strcmp(pivot, a[left].hovaten.ho_lot)<0)
              right--;
         if (left >= right) break;
         swap(a[left], a[right]);
@@ -340,15 +337,24 @@ int quickSort_ho_lot_step3(SV a[], int low, int high)
     swap(a[left], a[high]);
     return left;
 }
+void quickSort_ho_lot_step2(SV a[],int low,int high){
+    if(low<high){
+        // bien pi luu tru vi tri phan tu chia mang ra 2 mang con
+        int pi=quickSort_ho_lot_step3(a,low,high);
+        quickSort_ho_lot_step2(a,low,pi-1);
+        quickSort_ho_lot_step2(a,pi+1,high);
+    }
+}
 void quickSort_ho_lot_step1(SV a[]){
     int bien_trung_gian=0;
-    char b=a[0].hovaten.ten[0];
+    char b[10];
+    strcpy(b,a[0].hovaten.ten);
     for(int i=1;i<m;i++){
-        if(b!=a[i].hovaten.ten[0])
+        if(strcmp(b,a[i].hovaten.ten)!=0||i==m-1)
         {
             quickSort_ho_lot_step2(a,bien_trung_gian,i-1);
             bien_trung_gian=i;  
-            b=a[i].hovaten.ten[0];
+            strcpy(b,a[i].hovaten.ten);
         }
 
 
@@ -411,20 +417,20 @@ void xuat_ra_file(SV a[]){
     fclose(p);
     fp=fopen(filename,"w");
     fprintf(fp,"%-4s%d\n\n","LOP:",n+1); 
-    fprintf(fp,"%-118s\n"," ____________________________________________________________________________________________________________________");
-    fprintf(fp,"%-118s\n","| STT |       Ho Va Ten       | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |");
+    fprintf(fp,"%-121s\n"," _________________________________________________________________________________________________________________________");
+    fprintf(fp,"%-121s\n","| STT |         Ho Va Ten          | Gioi Tinh | Ngay Sinh |      Dia Chi     | Ma Sinh Vien |            Email           |");
     for(int i=0;i<m;i++){
     	     fprintf(fp,"%c",'|');
              fprintf(fp,"%2s%-3d","  ",i);
              fprintf(fp,"%c",'|');
-             fprintf(fp,"%10s%c%-12s%c",a[i].hovaten.ho_lot,' ',a[i].hovaten.ten,'|');
+             fprintf(fp,"%15s%c%-10s%s",a[i].hovaten.ho_lot,' ',a[i].hovaten.ten,"  |");
              fprintf(fp,"%3s%-8s%c","   ",a[i].gioi_tinh,'|');
              fprintf(fp,"%3s%-8s%c","   ",a[i].ngay_sinh,'|');
              fprintf(fp,"%5s%-13s%c","     ",a[i].dia_chi,'|');
              fprintf(fp,"%3s%-11s%c","   ",a[i].ma_sinh_vien,'|');
              fprintf(fp,"%5s%-23s%c\n","     ",a[i].email,'|');
         }
-    fprintf(fp,"%-118s"," --------------------------------------------------------------------------------------------------------------------");    
+    fprintf(fp,"%-121s"," -----------------------------------------------------------------------------------------------------------------------");    
     fclose(fp);
 }
 /* Do An Quan Li Hoc Sinh */
