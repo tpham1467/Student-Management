@@ -2,8 +2,8 @@
 #include<stdlib.h>
 #include<string.h>
 #include <conio.h>
+#include <windows.h>
 #define MAX 100
-bool check_add_student = false;
 bool check_find = false;
 int location_to_delete;
 int total_number_of_students = 0;
@@ -45,57 +45,70 @@ void output_file( SV student[] );
 // method main
 int main(){
 	SV student[MAX];
+	system("color 01");
+    printf("\n\n                                    PBL 1: DO AN LAP TRINH TINH TOAN\n");
+    printf("\n\n                            De Tai: Xay Dung Chuong Trinh Quan Li Sinh Vien \n");
+    printf("\n                     Sinh Vien Thuc Hien:                       Giao Vien Huong Dan:\n");
+    printf("                     Sinh Vien 1: Pham Van Tien Truong          Nguyen THi Minh Hy   \n");
+    printf("                     Sinh Vien 2:Pham Cong Huy\n");
+    getch();
     while(true){
-    system("cls");    
-    printf(" ************************************************\n");
-    printf("*               Moi Chon Yeu Cau:                *\n");
-    printf("*    1: Nhap Sinh Vien                           *\n");
-    printf("*    2: Sap Xep Sinh Vien                        *\n");
-    printf("*    3: Xoa Sinh Vien Theo Ten Hoac Ma Sinh Vien *\n");
-    printf("*    4: Tim Sinh Vien Theo Ten Hoac Ma Sinh Vien *\n");
-    printf("*    5: Cap Ma So Sinh Vien                      *\n");
-    printf("*    6: Cap Email                                *\n");
-    printf("*    7: In Danh Sach                             *\n");
-    printf("*    0: Thoat Chuong Trinh                       *\n");
-    printf("*                                                *\n");
-    printf("*                                                *\n");
-    printf(" ************************************************\n\n\n");
-    printf("Vui Long Nhap Yeu Cau:");
+    system("color 0f");
+    system("cls");
+    printf("\n\n\n");
+    printf("                            ------------------------------------------------\n");
+    printf("                           |               Moi Chon Yeu Cau:                |\n");
+    printf("                           |    1: Nhap Sinh Vien                           |\n");
+    printf("                           |    2: Sap Xep Sinh Vien                        |\n");
+    printf("                           |    3: Xoa Sinh Vien Theo Ten Hoac Ma Sinh Vien |\n");
+    printf("                           |    4: Tim Sinh Vien Theo Ten Hoac Ma Sinh Vien |\n");
+    printf("                           |    5: Cap Ma So Sinh Vien                      |\n");
+    printf("                           |    6: Cap Email                                |\n");
+    printf("                           |    7: In Danh Sach                             |\n");
+    printf("                           |    0: Thoat Chuong Trinh                       |\n");
+    printf("                           |                                                |\n");
+    printf("                            ------------------------------------------------\n\n\n"); 
+    printf("                           Vui Long Nhap Yeu Cau...");
     int key; // request code  
     scanf("%d",&key);
     printf("\n");
     switch(key){
     	case 1: {
-            if( check_innit ){
-                check_add_student = true;
-            }
-    		printf("Ban Da Chon Nhap Sinh Vien\n");
-            printf("Nhap So Sinh Vien Can Them:");
+    		printf("\n\n                           Ban Da Chon Nhap Sinh Vien\n");
+            printf("                           Nhap So Sinh Vien Can Them:");
             int students_need_add;
             scanf("%d",&students_need_add);
             while( students_need_add <= 0 ){
-                printf("Vui Long Nhap Lai:");
+                printf("                           Vui Long Nhap Lai:");
                 scanf("%d",&students_need_add);
             }
+            system("cls");
+            
             add_students_step1( student , students_need_add );
-            printf("\n\nBan Da Nhap Xong Thong Tin!");
+            system("color 0");
+            printf("\n\n                                Ban Da Nhap Xong Thong Tin!");
+            getch();
             check_innit = true;
             check_sort = false;
+            check_provide_student_code=false;
 			break;
 		}
     	case 2: {		
             if( check_innit ){
-            	    printf("Ban Da Chon Sap Xep Danh Sach Sinh Vien\n");
+            	    system("cls");
+            	    printf("\n\n                                Ban Da Chon Sap Xep Danh Sach Sinh Vien\n");
                     check_sort = true;
                     quickSort_last_name_step1( student , 0 , total_number_of_students-1 );
                     quickSort_first_name_step1( student );
-                    printf("\n\nBan Da Sap Xep!");
+                    printf("\n\n\n                                Ban Da Sap Xep!");
                     getch();
                     break;
             }
         
             else {
-                    printf("Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
+            	    system("cls");
+            	    system("color 06");
+                    printf("\n\n                                Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
                     getch();
                     break;
             }
@@ -104,13 +117,17 @@ int main(){
     	case 3: {
             
             if( check_innit ){
-            	    printf("Ban Da Chon Xoa Sinh Vien\n");
+            	    system("cls");
+            	    system("color 06");
+            	    printf("\n\n                                Ban Da Chon Xoa Sinh Vien\n");
                     delete_student( student );
                     getch();
                     break;
             }
-            else {
-                    printf("Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
+            else {  
+			        system("cls");
+            	    system("color 06");
+                    printf("\n\n                                Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
                     getch();
                     break;
 
@@ -118,28 +135,36 @@ int main(){
         }
     	case 4: {
             if( check_innit ){
+            	system("cls");
+            	system("color 06");
             	printf("Ban Da Chon tim Sinh Vien\n");
-                    find_student(student);
-                    getch();
-                    break;
+                find_student(student);
+                getch();
+                break;
             }
             else {
-                     printf("Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
+            	    system("cls");
+            	    system("color 06");
+                     printf("\n\n                                Ban Chua Nhap Thong Tin Cua Hoc Sinh Nao\n");
                      getch();
                      break;
 
             }
         }
     	case 5: {
-            if(check_sort ){
+            if( check_sort ){
+            	system("cls");
+            	system("color 06");
                 provide_student_code( student );
-                printf("Ban Da Duoc Cap MA Sinh Vien");
+                printf("\n\n                                Ban Da Duoc Cap MA Sinh Vien");
                  check_provide_student_code = true;
                  getch();
 			     break;
             }
             else {
-                printf("Ban Chua Cap Ma Sinh Vien\n");
+            	system("cls");
+            	system("color 06");
+                printf("\n\n                                Ban Chua Sap Xep\n");
                 getch();
                 break;
 
@@ -147,14 +172,18 @@ int main(){
 		}
     	case 6: {
             if( check_provide_student_code ){
-                printf("Ban Da Chon Cap Email\n\n\n");
+            	system("cls");
+            	system("color 06");
+                printf("\n\n                                Ban Da Chon Cap Email\n\n\n");
                 provide_email( student );
-                printf("Da Cap Email!");
+                printf("\n\n                                Da Cap Email!");
                 getch();
 			    break;
             }
             else {
-                printf("Ban Chua Cap Ma Sinh Vien");
+            	system("cls");
+            	system("color 06");
+                printf("\n\n                                Ban Chua Cap Ma Sinh Vien");
                 getch();
                 break;
 
@@ -167,7 +196,7 @@ int main(){
 		}
     	case 0: {
         output_file( student );    
-        printf("Hen Gap Lai !!!!");
+        printf("\n\n                                Hen Gap Lai !!!!");
         getch();
         return 0;
 
@@ -195,6 +224,7 @@ void add_students_step1( SV a[] , int students_need_add ){
         printf("Ban Hay Nhap Thong Tin Cua Sinh Vien: %d\n",total_number_of_students);
         add_students_step2(a[total_number_of_students]);
         total_number_of_students++;
+        system("cls");
 
     }
 }
