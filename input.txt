@@ -1,4 +1,2 @@
-3
-Pham Van Tien Truong      Nam18/11/2002au co
-Pham Cong Huy             Nam18/11/2002au co
-Tran Van Hai              Nu 18/11/2002Hoa khanh
+Name: Pham Van Tien Truong
+Id: 123      Marks: 3.7
