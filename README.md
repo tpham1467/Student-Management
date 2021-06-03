@@ -1,17 +1,18 @@
-# Game rắn săn mồi trên điện thoại Nokia(Snake)
-- Demo : https://youtu.be/8rflTMYJlso
+# App Quản Lí Sinh Viên
+- Demo : 
 # Mô tả
-- Game rắn săn mồi được viết bằng ngôn ngữ lập trình C.
 - Thư viện sử dụng `winbgim.h`
-- Sử dụng chức năng điều khiển bằng chuột và bàn phím.
+- Sử dụng chức năng điều khiển bằng chuột.
 
 # Tính năng
-- [x] Lưu điểm cao và tên người chơi
-- [x] Play/Pause trong khi chơi game
-- [x] Đã sửa lỗi xuất hiện trong video
+- [x] Thêm Sinh Viên
+- [x] Tìm Kiếm Sinh Viên
+- [x] Xóa Sinh Viên
 - [x] Thêm tính năng điều khiển bằng chuột
-- [x] Thêm file setup trong Release
-- [x] Âm thanh sống động
+- [x] Đọc Danh Sách Sinh Viên Từ File
+- [x] Xuất Danh Sách Ra File
+- [x] Sắp Xếp
+- [x] Cấp Mã Sinh Viên Và Email
 
 # Cài đặt
 Tải file graphics-lib-devC.zip tại repo này về và giải nén, tiến hành

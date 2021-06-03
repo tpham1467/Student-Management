@@ -33,9 +33,12 @@ struct student{
     char student_code[8];
     char email[15];
 };
-typedef  student SV; 
+typedef  student SV;
+
 void init();
 void showText(int x,int y,char *str);
+void showTextBackground(int x,int y,char *str,int color);
+
 void mainloop(SV student[]);
 void add_students( SV student[] ); 
 void quickSort_first_name_step2( SV student[] , int low , int high );  
@@ -55,9 +58,7 @@ void print_list_step2( SV sv );
 bool check_data( char data[] );  
 void output_file( SV student[] );
 void Read_in_file(SV student[]);
-void Read_information(SV &sv);
-void Filter_the_data_name(SV &sv,char name[]);
-void Filter_the_data_address(SV &sv,char address[]);
+void Filter_the_data(char *p);
 // method main
 int main(){
 	SV student[MAX];
@@ -107,14 +108,6 @@ void showTextBackground(int x,int y,char *str,int color){
 void mainloop(SV student[]){
 	initwindow (800,600);
 	setbkcolor(7);
-	int key;
-	//scanf("%d",&key);
-	//if(key==1){
-	//	Read_in_file(student);
-	//	print_list_step1(student);
-		
-	//}
-	
 	int x = 0;
 	char *s = new char[5];
 	PlaySound (TEXT ("start.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -159,45 +152,80 @@ void mainloop(SV student[]){
             add_students(student);
 
         } else if(mousey() <= 255){
-        	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-        	showTextBackground(220,200,"Find",15);
-		    setbkcolor(7);
+        	cleardevice();
+        	if(check_innit==true){
+	        	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	        	showTextBackground(220,200,"Find",15);
+			    setbkcolor(7);
+			    find_student( student );
+		   }
+		   else {
+		   		PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
+		        showTextBackground(250,200,"Empty class",15);
+		   }
+		    delay(2000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
-		    find_student( student );
 		    
         	
 		}else if(mousey() <= 325){
+			cleardevice();
+			if(check_innit==true){
 			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			showTextBackground(220,270,"Delete",15);
 		    setbkcolor(7);
+		    delete_student(student);
+		    }
+		    else {
+		    	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
+		        showTextBackground(250,200,"Empty class",15);
+		    	
+			}
+			delay(2000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
-		    delete_student(student);
 		    
 		}else if(mousey() <= 395){
-			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			showTextBackground(220,340,"Print List",15);
-		    setbkcolor(7);
+			cleardevice();
+			if(check_innit==true){
+			
+					PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
+					showTextBackground(220,340,"Print List",15);
+				    setbkcolor(7);
+				    print_list_step1(student);
+				    
+		    }else {
+			    PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
+			    showTextBackground(250,200,"Empty class",15);
+			}
+			delay(2000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
-		    print_list_step1(student);
 		}else if(mousey() <= 465){
-			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			showTextBackground(220,410,"Sort",15);
-		    setbkcolor(7);
-		    cleardevice();
-		    if(check_innit==false){
-		       showTextBackground(250,200,"Empty class",15);	
-			}
-			else {
+			    cleardevice();
 				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-				quickSort_last_name_step1(student,total_number_of_students-1,0);
+				showTextBackground(220,410,"Sort",15);
+			    setbkcolor(7);
+			    cleardevice();
+			    Read_in_file(student);
+		    if(check_innit==false){
+		       PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		       showTextBackground(250,200,"Empty class",15);
+		       
+			}
+			else if(check_sort==false){
+				quickSort_last_name_step1(student,0,total_number_of_students-1);
 				quickSort_first_name_step1(student);
 				showTextBackground(250,200,"Sort Success",15);
 			    check_sort=true;
 			    
+			    
 		       }
+		    else if(check_sort==true){
+		    	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		    	showTextBackground(250,200,"Sorted",15);
+		    	
+			}   
 		       delay(2000); 
 		       cleardevice();
 	    }
@@ -289,36 +317,35 @@ void add_students( SV student[]){
   
 }
 
-void Filter_the_data_name(SV &sv,char name[]){
-    int key1=0,key2=0;
-    for(int i=strlen(name)-1;i>=0;i--){
-        if(name[i]!=' '&&key1==0){
-            key1=i;
-        
-        }
-        if(name[i]==' '&&key2==0&&key1!=0){
-            key2=i;
-        }
-    }
-    int j=0;
-    strncpy(sv.name.first_name,name,key2+1);
-    for(int i=key2+1;i<=key1;i++){
-        sv.name.last_name[j]=name[i];
-        j++;
-    }
-
-
+void Filter_the_data(char *p){
+	for(int i=0;i<strlen(p);i++){
+	     if(p[i]=='_') p[i]=' ';
+	}
+     
 }
 void Read_in_file(SV student[]){
+	check_innit = true;
+    check_sort = false;
+    check_provide_student_code=false;
     p=fopen("input.txt","r");
     if(p==NULL) {
 	       printf("\nFile Khoong Ton Tai!!!\n");
 	   }
     else {
         printf("\nDang Doc File!!!\n");
-            
-            total_number_of_students++; 
-    
+        char first_name[50];
+	    char last_name[50];
+	    char gender[50];
+	    char d[50];
+        char ns[50];
+        int n=total_number_of_students;
+        while( fscanf(p, "First_Name: %s Last_Name:%s Gender: %s Date_of_birth: %s Address: %s\n", student[n].name.first_name,student[n].name.last_name,student[n].gender,student[n].Date_of_birth,student[n].address) != EOF ){
+		    Filter_the_data(student[n].name.first_name);
+		    Filter_the_data(student[n].name.last_name);
+		    Filter_the_data(student[n].address);
+            total_number_of_students++;
+			n=total_number_of_students;
+        }
         printf("\nDa Doc Xong File!!!\n");
         fclose(p);
     }
@@ -529,7 +556,7 @@ int quickSort_last_name_step2( SV student[] , int low , int high )
     return left;
 }
 void quickSort_last_name_step1( SV student[] , int low , int high )
-{
+{   
     if (low < high)
     {  
         int pi = quickSort_last_name_step2( student, low, high);
@@ -539,7 +566,7 @@ void quickSort_last_name_step1( SV student[] , int low , int high )
 }
 
 int quickSort_first_name_step3( SV student[] , int low , int high )
-{
+{ 
     char pivot[15];
     strcpy( pivot, student[0].name.first_name );
 
