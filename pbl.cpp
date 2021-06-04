@@ -58,7 +58,7 @@ void print_list_step2( SV sv );
 bool check_data( char data[] );  
 void output_file( SV student[] );
 void Read_in_file(SV student[]);
-void Filter_the_data(char *p);
+void Filter_the_data(char *p,char c);
 // method main
 int main(){
 	SV student[MAX];
@@ -152,11 +152,11 @@ void mainloop(SV student[]){
             add_students(student);
 
         } else if(mousey() <= 255){
-        	cleardevice();
+        	showTextBackground(220,200,"Find",15);
+        	setbkcolor(7);
+		    cleardevice();
         	if(check_innit==true){
 	        	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-	        	showTextBackground(220,200,"Find",15);
-			    setbkcolor(7);
 			    find_student( student );
 		   }
 		   else {
@@ -169,14 +169,15 @@ void mainloop(SV student[]){
 		    
         	
 		}else if(mousey() <= 325){
-			cleardevice();
-			if(check_innit==true){
-			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			showTextBackground(220,270,"Delete",15);
-		    setbkcolor(7);
+			setbkcolor(7);
+			cleardevice();
+			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
+			if(check_innit==true){
 		    delete_student(student);
 		    }
 		    else {
+		    	delay(300);
 		    	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
 		        showTextBackground(250,200,"Empty class",15);
 		    	
@@ -187,11 +188,12 @@ void mainloop(SV student[]){
 		    
 		}else if(mousey() <= 395){
 			cleardevice();
+			showTextBackground(220,340,"Print List",15);
+			setbkcolor(7);
+			cleardevice();
 			if(check_innit==true){
 			
 					PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-					showTextBackground(220,340,"Print List",15);
-				    setbkcolor(7);
 				    print_list_step1(student);
 				    
 		    }else {
@@ -203,10 +205,10 @@ void mainloop(SV student[]){
 		    clearmouseclick(WM_LBUTTONDOWN);
 		}else if(mousey() <= 465){
 			    cleardevice();
-				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-				showTextBackground(220,410,"Sort",15);
+			    showTextBackground(220,410,"Sort",15);
 			    setbkcolor(7);
 			    cleardevice();
+				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			    Read_in_file(student);
 		    if(check_innit==false){
 		       PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -243,11 +245,62 @@ void mainloop(SV student[]){
     }
 	
 }
-
+void Filter_the_data(char *p,char c){
+	for(int i=0;i<strlen(p);i++){
+	     if(p[i]==c) p[i]=' ';
+	}
+     
+}
+void read_data_from_keyboard(char *p,int x,int y,int z,int w){
+	char str[2];
+	str[1] = 0;
+	char key=0;
+	int m=0;
+	int r;
+	bool check=false;
+	while(key!=13){
+			key= getch();
+			if(key==8){
+				p[m]='?';
+				m--;
+	            char b[51]={""};
+	            strncat(b,p,m+1);
+	            bar(x,y,z,w);
+	            outtextxy(x,y,b);
+	            
+			}
+			else str[0] = key;
+			if(key!=13&&key!=8){
+			   for(int i=0;i<strlen(p);i++){
+			   	if(p[i]=='?') {
+				   p[i]=key;
+				   check=true;
+				   r=i;
+				   if(i==strlen(p)-1) m=strlen(p)-1;
+				   break;
+			    }
+		    }
+		    if(check==true){
+		    	char b[51]={""};	
+			    strncat(b,p,r+1);
+			    bar(x,y,z,w);
+			    outtextxy(x,y,b);
+	    	    check=false;
+			}
+			else {
+				str[0]=key;
+				strcat(p,str);
+				bar(x,y,z,w);
+				outtextxy(x,y,p);
+				m=strlen(p)-1;
+			}
+	   }
+	   
+	   }
+	
+	
+} 
 void add_students( SV student[]){
-		char str[2];
-		str[1] = 0;
-		char key=0;
 	    clearmouseclick(WM_LBUTTONDOWN);
 		settextstyle(1,0,3);
 		setfillstyle(1,15);
@@ -256,72 +309,27 @@ void add_students( SV student[]){
 		showText(50,250,"Gender:");
 		showText(50,350,"Date_of_birth:");
 		showText(50,450,"Address:");
-		bar(250,50,600,80);
-		bar(250,150,600,180);
-		bar(250,250,600,280);
-		bar(300,350,650,380);
-		bar(200,450,600,480);
-		bool check=false;
-		
-	    while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			strcat(student[total_number_of_students].name.first_name,str);
-			outtextxy(250,50,student[total_number_of_students].name.first_name);
-		}
-	   }
-	   outtextxy(250,100,student[total_number_of_students].name.first_name);
-	   key=0;
-	   while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			strcat(student[total_number_of_students].name.last_name,str);
-			outtextxy(250,150,student[total_number_of_students].name.last_name);
-		}
-	   }
-	   
-	   key=0;
-	   while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			strcat(student[total_number_of_students].gender,str);
-			outtextxy(250,250,student[total_number_of_students].gender);
-		}
-	   }
-	   key=0;
-	   while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			strcat(student[total_number_of_students].Date_of_birth,str);
-			outtextxy(300,350,student[total_number_of_students].Date_of_birth);
-		}
-	   }
-	   key=0;
-	   while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			strcat(student[total_number_of_students].address,str);
-			outtextxy(200,450,student[total_number_of_students].address);
-		}
-	   }
+		bar(250,50,600,75);
+		bar(250,150,600,175);
+		bar(250,250,600,275);
+		bar(300,350,650,375);
+		bar(200,450,600,475);
+        read_data_from_keyboard(student[total_number_of_students].name.first_name,250,50,600,75);
+        Filter_the_data(student[total_number_of_students].name.first_name,63);
+		read_data_from_keyboard(student[total_number_of_students].name.last_name,250,150,600,175);
+		Filter_the_data(student[total_number_of_students].name.last_name,63);
+		read_data_from_keyboard(student[total_number_of_students].gender,250,250,600,275);
+		Filter_the_data(student[total_number_of_students].gender,63);
+		read_data_from_keyboard(student[total_number_of_students].Date_of_birth,300,350,650,375);
+		Filter_the_data(student[total_number_of_students].Date_of_birth,63);
+		read_data_from_keyboard(student[total_number_of_students].address,200,450,600,475);
+		Filter_the_data(student[total_number_of_students].address,63);
 	   total_number_of_students++;
 	   delay(1000);
 	   cleardevice();
 	
 	
   
-}
-
-void Filter_the_data(char *p){
-	for(int i=0;i<strlen(p);i++){
-	     if(p[i]=='_') p[i]=' ';
-	}
-     
 }
 void Read_in_file(SV student[]){
 	check_innit = true;
@@ -340,9 +348,9 @@ void Read_in_file(SV student[]){
         char ns[50];
         int n=total_number_of_students;
         while( fscanf(p, "First_Name: %s Last_Name:%s Gender: %s Date_of_birth: %s Address: %s\n", student[n].name.first_name,student[n].name.last_name,student[n].gender,student[n].Date_of_birth,student[n].address) != EOF ){
-		    Filter_the_data(student[n].name.first_name);
-		    Filter_the_data(student[n].name.last_name);
-		    Filter_the_data(student[n].address);
+		    Filter_the_data(student[n].name.first_name,95);
+		    Filter_the_data(student[n].name.last_name,95);
+		    Filter_the_data(student[n].address,95);
             total_number_of_students++;
 			n=total_number_of_students;
         }
@@ -464,20 +472,10 @@ void find_student( SV student[] ){
 	fflush(stdin);
 	settextstyle(1,0,3);
 	showText(10,50,"Enter Name Or Student Code");
-	bar(400,50,750,80);
+	bar(400,50,750,75);
     char data[50]={""};
-    char str[2];
-	str[1] = 0;
-	char key=0;
-	while(key!=13){
-			key= getch();
-			str[0] = key;
-			if(key!=13){
-			
-			strcat(data,str);
-			outtextxy(400,50,data);
-		}
-    }   
+    read_data_from_keyboard(data,400,50,750,75);
+    Filter_the_data(student[total_number_of_students].name.first_name,63);
     if( check_sort ){
         check_find  = Binary_Search(student,data);
 
@@ -490,7 +488,7 @@ void find_student( SV student[] ){
     if(check_find == false){
     	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
          showText(280,200,"No Found");
-         key=0;
+         char key=0;
          while(key!=13){
          	key=getch();
 		 }
@@ -503,7 +501,7 @@ void find_student( SV student[] ){
         strcat( name , b );
         strcat( name , student[location_to_delete].name.last_name );
     	settextstyle(1,0,2);
-    	key=0;
+    	char key=0;
     	showText(10,2,"Name:");
     	showText(115,2,name);
     	showText(10,100,"Gender:");
