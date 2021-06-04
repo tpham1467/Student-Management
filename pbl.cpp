@@ -406,7 +406,7 @@ void delete_student( SV student[] ){
 }    
 bool Linear_Search( SV student[] , char data[] ){
     int i = 0;
-    char name[20];
+    char name[50];
     char b[2] = {' '};
     if( check_data(data) == false ){ 
         strcpy( name , student[i].name.first_name );
@@ -439,6 +439,7 @@ bool Binary_Search( SV student[] , char data[] ){
 
                 if ( stricmp(student[mid].student_code,data) == 0 ){
                     location_to_delete = mid;
+                    
                     return true;
                 }
                 if ( stricmp(student[mid].student_code,data) > 0 )
@@ -446,28 +447,11 @@ bool Binary_Search( SV student[] , char data[] ){
                 else if ( stricmp(student[mid].student_code,data) < 0 )
                     left = mid + 1; 
             }
-    }
-    else {
-        char name[100];
-        while ( left <= right )
-            {
-                mid = ( left + right ) / 2;
-                strcpy( name , student[mid].name.first_name );
-                strcat( name , b );
-                strcat( name , student[mid].name.last_name );
-                if ( stricmp(name,data) == 0){
-                    location_to_delete = mid;
-                    return true; 
-                }
-                if ( stricmp(name,data) > 0)
-                    right = mid - 1; 
-                else if (stricmp(name,data) < 0)
-                    left = mid + 1; 
-            }
-    }
-    return false; 
+    }else {
+    	return Linear_Search(student,data);
+    	
+	}
 }
-
 void find_student( SV student[] ){
 	fflush(stdin);
 	settextstyle(1,0,3);
@@ -475,14 +459,22 @@ void find_student( SV student[] ){
 	bar(400,50,750,75);
     char data[50]={""};
     read_data_from_keyboard(data,400,50,750,75);
-    Filter_the_data(student[total_number_of_students].name.first_name,63);
+    Filter_the_data(data,63);
+    char name[60];
+    char b[2] = {' '};
+    strcpy( name , student[0].name.first_name );
+                strcat( name , b );
+                strcat( name , student[0].name.last_name );
+    printf("%d",strlen(data));
     if( check_sort ){
         check_find  = Binary_Search(student,data);
+        printf("1");
 
 
     }
     else {
         check_find = Linear_Search(student,data);
+        printf("2");
     }
 
     if(check_find == false){
