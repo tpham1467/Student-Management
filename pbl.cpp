@@ -54,7 +54,7 @@ bool Binary_Search( SV student[] );
 void provide_student_code( SV student[] );
 void provide_email( SV student[] ); 
 void print_list_step1( SV student[] ); 
-void print_list_step2( SV sv );
+void print_list_step2( SV sv ,int x );
 bool check_data( char data[] );  
 void output_file( SV student[] );
 void Read_in_file(SV student[]);
@@ -96,11 +96,11 @@ void showText(int x,int y,char *str){
 	setcolor(color);
 	outtextxy(x+3,y,str);
 	setcolor(c);
-	delay(50);
+	delay(100);
 }
 void showTextBackground(int x,int y,char *str,int color){
 	int bk = getbkcolor();
-	setbkcolor(color);
+	setbkcolor(color-15);
 	outtextxy(x,y,str);
 	delay(200);
 	setbkcolor(bk);
@@ -108,6 +108,7 @@ void showTextBackground(int x,int y,char *str,int color){
 void mainloop(SV student[]){
 	initwindow (800,600);
 	setbkcolor(7);
+	/*
 	int x = 0;
 	char *s = new char[5];
 	PlaySound (TEXT ("start.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -122,10 +123,10 @@ void mainloop(SV student[]){
 		delay (20);
 		x++;
 	}
-	
+	*/
 	cleardevice();
 	while(true){
-        x1:
+		setbkcolor(0);
         setbkcolor(7);
 		clearmouseclick(WM_LBUTTONDOWN);
 		while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 110 || mousex() > 580 ){
@@ -144,13 +145,27 @@ void mainloop(SV student[]){
         if (mousey() <= 185){
 		    PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
         	showTextBackground(220,130,"Add",15);
-		    setbkcolor(7);
 		    cleardevice();
+		    clearmouseclick(WM_LBUTTONDOWN);
+		    while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 110 || mousex() > 580 ){
+		    	showText(220,200,"Read From File");
+		        showText(220,270,"Enter Live Info");
+		    }
+		    if (mousey() <= 270){
+		    	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		    	showTextBackground(220,200,"Read From File",15);
+		    	Read_in_file(student);
+			}else {
+				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);	
+	            showTextBackground(220,270,"Enter Live Info",15);
+	            cleardevice();
+	            add_students(student);
+	           }  
             check_innit = true;
             check_sort = false;
             check_provide_student_code=false;
-            add_students(student);
-
+            cleardevice();
+            clearmouseclick(WM_LBUTTONDOWN);
         } else if(mousey() <= 255){
         	showTextBackground(220,200,"Find",15);
         	setbkcolor(7);
@@ -170,7 +185,6 @@ void mainloop(SV student[]){
         	
 		}else if(mousey() <= 325){
 			showTextBackground(220,270,"Delete",15);
-			setbkcolor(7);
 			cleardevice();
 			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			if(check_innit==true){
@@ -187,15 +201,11 @@ void mainloop(SV student[]){
 		    clearmouseclick(WM_LBUTTONDOWN);
 		    
 		}else if(mousey() <= 395){
-			cleardevice();
 			showTextBackground(220,340,"Print List",15);
-			setbkcolor(7);
 			cleardevice();
 			if(check_innit==true){
-			
 					PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				    print_list_step1(student);
-				    
 		    }else {
 			    PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
 			    showTextBackground(250,200,"Empty class",15);
@@ -206,10 +216,8 @@ void mainloop(SV student[]){
 		}else if(mousey() <= 465){
 			    cleardevice();
 			    showTextBackground(220,410,"Sort",15);
-			    setbkcolor(7);
 			    cleardevice();
 				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			    Read_in_file(student);
 		    if(check_innit==false){
 		       PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		       showTextBackground(250,200,"Empty class",15);
@@ -230,6 +238,7 @@ void mainloop(SV student[]){
 			}   
 		       delay(2000); 
 		       cleardevice();
+		       clearmouseclick(WM_LBUTTONDOWN);
 	    }
 		else {
 			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -301,7 +310,6 @@ void read_data_from_keyboard(char *p,int x,int y,int z,int w){
 	
 } 
 void add_students( SV student[]){
-	    clearmouseclick(WM_LBUTTONDOWN);
 		settextstyle(1,0,3);
 		setfillstyle(1,15);
 		showText(50,50,"First Name:");
@@ -314,33 +322,52 @@ void add_students( SV student[]){
 		bar(250,250,600,275);
 		bar(300,350,650,375);
 		bar(200,450,600,475);
+		//first name
         read_data_from_keyboard(student[total_number_of_students].name.first_name,250,50,600,75);
         Filter_the_data(student[total_number_of_students].name.first_name,63);
+        // last name
 		read_data_from_keyboard(student[total_number_of_students].name.last_name,250,150,600,175);
 		Filter_the_data(student[total_number_of_students].name.last_name,63);
+		// gender
 		read_data_from_keyboard(student[total_number_of_students].gender,250,250,600,275);
 		Filter_the_data(student[total_number_of_students].gender,63);
+		// date of birth
 		read_data_from_keyboard(student[total_number_of_students].Date_of_birth,300,350,650,375);
 		Filter_the_data(student[total_number_of_students].Date_of_birth,63);
+		//address
 		read_data_from_keyboard(student[total_number_of_students].address,200,450,600,475);
 		Filter_the_data(student[total_number_of_students].address,63);
-	   total_number_of_students++;
-	   delay(1000);
+		
+	    total_number_of_students++;
+	    clearmouseclick(WM_LBUTTONDOWN);
+	    while(!ismouseclick(WM_LBUTTONDOWN) || mousex() < 100   || mousey() < 400 || mousex() > 400){
+			showText(150,550,"Back");
+            showText(300,550,"Add");
+            printf("1");
+	   }
+	   if(mousex()<=275){
+	   	showTextBackground(150,550,"Back",15);
+	
+	   	
+	   }
+	   else {
+	   	showTextBackground(300,550,"Add",15);
+        cleardevice();
+	   	add_students(student);
+	   	
+	   }
+	    
+	   delay(500);
 	   cleardevice();
 	
 	
   
 }
 void Read_in_file(SV student[]){
-	check_innit = true;
-    check_sort = false;
-    check_provide_student_code=false;
     p=fopen("input.txt","r");
     if(p==NULL) {
-	       printf("\nFile Khoong Ton Tai!!!\n");
 	   }
     else {
-        printf("\nDang Doc File!!!\n");
         char first_name[50];
 	    char last_name[50];
 	    char gender[50];
@@ -354,32 +381,60 @@ void Read_in_file(SV student[]){
             total_number_of_students++;
 			n=total_number_of_students;
         }
-        printf("\nDa Doc Xong File!!!\n");
         fclose(p);
     }
 } 
 void print_list_step1(SV student[]){
-    printf(" _______________________________________________________________________________________________________________________________________________\n");
-    printf("| STT |             Ho Va Ten           |Gioi Tinh|  Ngay Sinh |                      Dia Chi                     |Ma Sinh Vien|      Email     |\n");
+	setbkcolor(0);
+	cleardevice();
+	setcolor(15);
+	rectangle(5,5,1470,30+25*(total_number_of_students));
+	rectangle(5,5,1470,30);
+	line(50,5,50,30+25*(total_number_of_students));
+	line(400,5,400,30+25*(total_number_of_students));
+	line(500,5,500,30+25*(total_number_of_students));
+   	line(700,5,700,30+25*(total_number_of_students));
+   	line(1100,5,1100,30+25*(total_number_of_students));
+   	line(1300,5,1300,30+25*(total_number_of_students));
+   	settextstyle(2,0,7);
+   	outtextxy(7,7,"Stt");
+   	outtextxy(140,7,"Ho Va Ten");
+   	outtextxy(415,7,"Gioi Tinh");
+   	outtextxy(550,7,"Ngay sinh");
+   	outtextxy(840,7,"Dia Chi");
+   	outtextxy(1145,7,"Ma Sinh Vien");
+   	outtextxy(1350,7,"Email");
+   	int x=5;
+   	char s[5]={""};
     for(int i = 0 ; i < total_number_of_students ; i++ ){
-          printf("| %3d |", i );
-      print_list_step2( student[i] );
+      print_list_step2( student[i],x);
+      sprintf (s,"%d",i);
+      outtextxy(7,x+25+2,s);
+      line(5,x+25,1470,x+25);
+      x+=25;
     }
-    printf(" -----------------------------------------------------------------------------------------------------------------------------------------------");
+    clearmouseclick(WM_LBUTTONDOWN);
+    char key=0;
+    while(key!=13){
+         	key=getch();
+		 }
+	showTextBackground(600,30+25*(total_number_of_students)+100,"Back",15);
+	setbkcolor(7);
+	setbkcolor(0);
+	setbkcolor(7);
 }
-void print_list_step2( SV sv ){
-    char name[34];
-    char b[2] = {' '};
-    strcpy( name , sv.name.first_name );
-    strcat( name , b );
-    strcat( name ,sv.name.last_name );
-    printf("%-33s|", name );
-    printf("%-9s|", sv.gender );
-    printf("%-12s|", sv.Date_of_birth );
-    printf("%-50s|", sv.address );
-    printf("%-12s|", sv.student_code ); 
-    printf("%-16s|", sv.email );
-    printf("\n");
+void print_list_step2( SV sv ,int x){
+	 char name[50]={""};
+	 char b[2] = {' '};
+	 strcpy( name , sv.name.first_name );
+     strcat( name , b );
+     strcat( name , sv.name.last_name );
+     outtextxy(70,x+25+2,name);
+     outtextxy(415,x+25+2,sv.gender);
+     outtextxy(550,x+25+2,sv.Date_of_birth);
+     outtextxy(710,x+25+2,sv.address);
+     outtextxy(1145,x+25+2,sv.student_code);
+     outtextxy(1350,x+25+2,sv.email);
 }
 bool check_data( char data[] ){
     if( data[0] >= '0' && data[0] <= '9' ) return true;
@@ -396,9 +451,13 @@ void delete_student( SV student[] ){
             showText(300,300,"Back");
 	}
         if (mousey() <= 250){
+        	showTextBackground(300,100,"Delete",15);
            for(int j = location_to_delete+1 ; j < total_number_of_students ; j++ ) student[j-1] = student[j];
            total_number_of_students--;
        }
+       else {
+       	showTextBackground(300,300,"Back",15);
+	   }
    
         cleardevice();
     }
@@ -468,13 +527,13 @@ void find_student( SV student[] ){
     printf("%d",strlen(data));
     if( check_sort ){
         check_find  = Binary_Search(student,data);
-        printf("1");
+        
 
 
     }
     else {
         check_find = Linear_Search(student,data);
-        printf("2");
+        
     }
 
     if(check_find == false){
