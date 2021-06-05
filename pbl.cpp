@@ -102,7 +102,7 @@ void showTextBackground(int x,int y,char *str,int color){
 	int bk = getbkcolor();
 	setbkcolor(color-15);
 	outtextxy(x,y,str);
-	delay(200);
+	delay(100);
 	setbkcolor(bk);
 }
 void mainloop(SV student[]){
