@@ -5,20 +5,20 @@
 #include <conio.h>
 #include<time.h>
 #include <windows.h>
-#include <iostream>
-#include <mmsystem.h>
-#pragma comment (lib, "winmm.lib")
+
 
 
 #define MAX 100
 #define Length 1300
 #define Width 1000
+
 bool check_find = false;
 int location_to_delete;
 int total_number_of_students = 0;
 bool check_innit = false;
 bool check_sort = false;
 bool check_provide_student_code = false;
+bool Check_provide_email = false;
 FILE *p;
 struct first_and_last_name{
     char first_name[25];
@@ -129,22 +129,24 @@ void mainloop(SV student[]){
 		setbkcolor(0);
         setbkcolor(7);
 		clearmouseclick(WM_LBUTTONDOWN);
-		while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 110 || mousex() > 580 ){
+		while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 20 || mousex() > 580 ){
 		settextstyle(1,0,4);
-		showText(120,50,"Student Management");
+		showText(120,10,"Student Management");
 		settextstyle(10,0,5);
-		showText(220,130,"Add");
-		showText(220,200,"Find");
-		showText(220,270,"Delete");
-		showText(220,340,"Print List");
-		showText(220,410,"Sort");
-		showText(220,480,"Exit");
+		showText(220,50,"Add");
+		showText(220,120,"Find");
+		showText(220,190,"Delete");
+		showText(220,260,"Print List");
+		showText(220,330,"Sort");
+		showText(220,400,"Provide Student Code");
+		showText(220,470,"Provide Email");
+		showText(220,540,"Exit");
 	
 	}
 		clearmouseclick(WM_LBUTTONDOWN);
-        if (mousey() <= 185){
+        if (mousey() <= 95){
 		    PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-        	showTextBackground(220,130,"Add",15);
+        	showTextBackground(220,50,"Add",15);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
 		    while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 110 || mousex() > 580 ){
@@ -163,11 +165,12 @@ void mainloop(SV student[]){
 	           }  
             check_innit = true;
             check_sort = false;
-            check_provide_student_code=false;
+            check_provide_student_code = false;
+            Check_provide_email = false;
             cleardevice();
             clearmouseclick(WM_LBUTTONDOWN);
-        } else if(mousey() <= 255){
-        	showTextBackground(220,200,"Find",15);
+        } else if(mousey() <= 165){
+        	showTextBackground(220,120,"Find",15);
         	setbkcolor(7);
 		    cleardevice();
         	if(check_innit==true){
@@ -178,13 +181,13 @@ void mainloop(SV student[]){
 		   		PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
 		        showTextBackground(250,200,"Empty class",15);
 		   }
-		    delay(2000);
+		    delay(1000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
 		    
         	
-		}else if(mousey() <= 325){
-			showTextBackground(220,270,"Delete",15);
+		}else if(mousey() <= 235){
+			showTextBackground(220,190,"Delete",15);
 			cleardevice();
 			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			if(check_innit==true){
@@ -196,12 +199,12 @@ void mainloop(SV student[]){
 		        showTextBackground(250,200,"Empty class",15);
 		    	
 			}
-			delay(2000);
+			delay(1000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
 		    
-		}else if(mousey() <= 395){
-			showTextBackground(220,340,"Print List",15);
+		}else if(mousey() <= 305){
+			showTextBackground(220,260,"Print List",15);
 			cleardevice();
 			if(check_innit==true){
 					PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -213,9 +216,9 @@ void mainloop(SV student[]){
 			delay(2000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
-		}else if(mousey() <= 465){
+		}else if(mousey() <= 375){
 			    cleardevice();
-			    showTextBackground(220,410,"Sort",15);
+			    showTextBackground(220,330,"Sort",15);
 			    cleardevice();
 				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		    if(check_innit==false){
@@ -240,9 +243,46 @@ void mainloop(SV student[]){
 		       cleardevice();
 		       clearmouseclick(WM_LBUTTONDOWN);
 	    }
+	    else if(mousey() <= 445){
+	    	showTextBackground(220,400,"Provide Student Code",15);
+	    	cleardevice();
+	    	if(check_provide_student_code == true){
+	    		showTextBackground(100,200,"Student ID Has Been Issued",15);
+			}
+			else if(check_sort==false){
+				showTextBackground(100,200,"No Student Code Yet",15);
+			}else {
+				showTextBackground(100,200,"Successful Code Issue",15);
+				provide_student_code( student );
+				check_provide_student_code == true;
+			}
+			delay(1000);
+			cleardevice();
+		    clearmouseclick(WM_LBUTTONDOWN);
+		}
+		else if(mousey() <= 515){
+			cleardevice();
+			showTextBackground(220,470,"Provide Email",15);
+			cleardevice();
+			if(	Check_provide_email){
+				showTextBackground(100,200,"Email Has Been Issued",15);
+				
+			}
+			else if(check_provide_student_code == false){
+				showTextBackground(100,200,"No Student Code Yet",15);
+				
+			}else {
+				showTextBackground(100,200,"Email Delivery Successful",15);
+				provide_email( student ); 
+				Check_provide_email=true; 
+			} 
+			delay(1000);
+			cleardevice();
+		    clearmouseclick(WM_LBUTTONDOWN);
+		}
 		else {
 			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			showTextBackground(220,480,"Exit",15);
+			showTextBackground(220,540,"Exit",15);
 		    setbkcolor(7);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
@@ -365,7 +405,10 @@ void add_students( SV student[]){
 }
 void Read_in_file(SV student[]){
     p=fopen("input.txt","r");
+    cleardevice();
     if(p==NULL) {
+    	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    	showTextBackground(250,200,"File Does Not Exist",15);
 	   }
     else {
         char first_name[50];
@@ -381,8 +424,10 @@ void Read_in_file(SV student[]){
             total_number_of_students++;
 			n=total_number_of_students;
         }
+        showTextBackground(250,200,"Read Success",15);
         fclose(p);
     }
+    delay(500);
 } 
 void print_list_step1(SV student[]){
 	setbkcolor(0);
