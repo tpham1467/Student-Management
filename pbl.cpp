@@ -18,7 +18,7 @@ int total_number_of_students = 0;
 bool check_innit = false;
 bool check_sort = false;
 bool check_provide_student_code = false;
-bool Check_provide_email = false;
+bool check_provide_email = false;
 FILE *p;
 struct first_and_last_name{
     char first_name[25];
@@ -28,10 +28,10 @@ struct first_and_last_name{
 struct student{    
     first_and_last_name name;
     char gender[5];
-    char Date_of_birth[13];
+    char Date_of_birth[15];
     char address[50];
-    char student_code[8];
-    char email[15];
+    char student_code[10];
+    char email[25];
 };
 typedef  student SV;
 
@@ -142,7 +142,7 @@ void mainloop(SV student[]){
 		showText(220,470,"Provide Email");
 		showText(220,540,"Exit");
 	
-	}
+	}    
 		clearmouseclick(WM_LBUTTONDOWN);
         if (mousey() <= 95){
 		    PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -151,7 +151,7 @@ void mainloop(SV student[]){
 		    clearmouseclick(WM_LBUTTONDOWN);
 		    while (!ismouseclick(WM_LBUTTONDOWN) || mousex() < 200 || mousey() > 600 || mousey() < 110 || mousex() > 580 ){
 		    	showText(220,200,"Read From File");
-		        showText(220,270,"Enter Live Info");
+		        showText(220,270,"Enter Directly Info");
 		    }
 		    if (mousey() <= 270){
 		    	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -159,25 +159,26 @@ void mainloop(SV student[]){
 		    	Read_in_file(student);
 			}else {
 				PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);	
-	            showTextBackground(220,270,"Enter Live Info",15);
+	            showTextBackground(220,270,"Enter Directly Info",15);
 	            cleardevice();
 	            add_students(student);
 	           }  
             check_innit = true;
             check_sort = false;
             check_provide_student_code = false;
-            Check_provide_email = false;
+            check_provide_email = false;
             cleardevice();
             clearmouseclick(WM_LBUTTONDOWN);
         } else if(mousey() <= 165){
         	showTextBackground(220,120,"Find",15);
+        	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
         	setbkcolor(7);
 		    cleardevice();
         	if(check_innit==true){
-	        	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			    find_student( student );
 		   }
 		   else {
+		     	delay(300);
 		   		PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
 		        showTextBackground(250,200,"Empty class",15);
 		   }
@@ -213,7 +214,6 @@ void mainloop(SV student[]){
 			    PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);	
 			    showTextBackground(250,200,"Empty class",15);
 			}
-			delay(2000);
 		    cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
 		}else if(mousey() <= 375){
@@ -236,45 +236,61 @@ void mainloop(SV student[]){
 		       }
 		    else if(check_sort==true){
 		    	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-		    	showTextBackground(250,200,"Sorted",15);
+		    	showTextBackground(250,200,"Arranged",15);
 		    	
 			}   
-		       delay(2000); 
+		       delay(1000); 
 		       cleardevice();
 		       clearmouseclick(WM_LBUTTONDOWN);
 	    }
 	    else if(mousey() <= 445){
+	    	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	    	showTextBackground(220,400,"Provide Student Code",15);
 	    	cleardevice();
-	    	if(check_provide_student_code == true){
-	    		showTextBackground(100,200,"Student ID Has Been Issued",15);
+	    	if(check_innit==false){
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		        showTextBackground(250,200,"Empty class",15);
+		    }
+	    	else if(check_provide_student_code == true){
+	    		PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	    		showTextBackground(100,200,"Student Code Has Been Issued",15);
 			}
-			else if(check_sort==false){
-				showTextBackground(100,200,"No Student Code Yet",15);
+			else if(check_sort == false){
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				showTextBackground(100,200,"Not Arranged",15);
 			}else {
-				showTextBackground(100,200,"Successful Code Issue",15);
+				showTextBackground(50,100,"Student Code has been issued successfully",15);
 				provide_student_code( student );
-				check_provide_student_code == true;
+				check_provide_student_code = true;
 			}
 			delay(1000);
 			cleardevice();
 		    clearmouseclick(WM_LBUTTONDOWN);
 		}
 		else if(mousey() <= 515){
+			PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			cleardevice();
 			showTextBackground(220,470,"Provide Email",15);
 			cleardevice();
-			if(	Check_provide_email){
+			if(check_innit==false){
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		        showTextBackground(250,200,"Empty class",15);
+				
+			}else if(check_provide_email==true){
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				showTextBackground(100,200,"Email Has Been Issued",15);
 				
-			}
+	     	}
 			else if(check_provide_student_code == false){
+				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				showTextBackground(100,200,"No Student Code Yet",15);
 				
-			}else {
-				showTextBackground(100,200,"Email Delivery Successful",15);
+			}
+			else {
+				showTextBackground(100,200,"Email Issued Successfully",15);
 				provide_email( student ); 
-				Check_provide_email=true; 
+				check_provide_email = true;
 			} 
 			delay(1000);
 			cleardevice();
@@ -424,7 +440,7 @@ void Read_in_file(SV student[]){
             total_number_of_students++;
 			n=total_number_of_students;
         }
-        showTextBackground(250,200,"Read Success",15);
+        showTextBackground(250,200,"Read Successfully",15);
         fclose(p);
     }
     delay(500);
@@ -440,15 +456,15 @@ void print_list_step1(SV student[]){
 	line(500,5,500,30+25*(total_number_of_students));
    	line(700,5,700,30+25*(total_number_of_students));
    	line(1100,5,1100,30+25*(total_number_of_students));
-   	line(1300,5,1300,30+25*(total_number_of_students));
+   	line(1250,5,1250,30+25*(total_number_of_students));
    	settextstyle(2,0,7);
    	outtextxy(7,7,"Stt");
    	outtextxy(140,7,"Ho Va Ten");
    	outtextxy(415,7,"Gioi Tinh");
    	outtextxy(550,7,"Ngay sinh");
    	outtextxy(840,7,"Dia Chi");
-   	outtextxy(1145,7,"Ma Sinh Vien");
-   	outtextxy(1350,7,"Email");
+   	outtextxy(1110,7,"Ma Sinh Vien");
+   	outtextxy(1280,7,"Email");
    	int x=5;
    	char s[5]={""};
     for(int i = 0 ; i < total_number_of_students ; i++ ){
@@ -463,7 +479,6 @@ void print_list_step1(SV student[]){
     while(key!=13){
          	key=getch();
 		 }
-	showTextBackground(600,30+25*(total_number_of_students)+100,"Back",15);
 	setbkcolor(7);
 	setbkcolor(0);
 	setbkcolor(7);
@@ -478,8 +493,8 @@ void print_list_step2( SV sv ,int x){
      outtextxy(415,x+25+2,sv.gender);
      outtextxy(550,x+25+2,sv.Date_of_birth);
      outtextxy(710,x+25+2,sv.address);
-     outtextxy(1145,x+25+2,sv.student_code);
-     outtextxy(1350,x+25+2,sv.email);
+     outtextxy(1110,x+25+2,sv.student_code);
+     outtextxy(1260,x+25+2,sv.email);
 }
 bool check_data( char data[] ){
     if( data[0] >= '0' && data[0] <= '9' ) return true;
@@ -583,7 +598,7 @@ void find_student( SV student[] ){
 
     if(check_find == false){
     	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-         showText(280,200,"No Found");
+         showText(280,200,"Not Find");
          char key=0;
          while(key!=13){
          	key=getch();

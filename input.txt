@@ -7,9 +7,5 @@ First_Name: Ho_ky Last_Name:huy Gender: Nam Date_of_birth: 18/11/2002 Address: H
 First_Name: tang_le_thanh Last_Name:Tu Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
 First_Name: Le_quoc Last_Name:ron Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
 First_Name: Tran_thi_kim Last_Name:Quy Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
-First_Name: Tran_thi_kim Last_Name:Quy Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
-First_Name: Tran_thi_kim Last_Name:Quy Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
-First_Name: Tran_thi_kim Last_Name:Quy Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
-First_Name: Tran_thi_kim Last_Name:Quy Gender: nu Date_of_birth: 18/11/2002 Address: Hoa_khanh_Au_Co
 
  
