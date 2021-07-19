@@ -6,8 +6,6 @@
 #include<time.h>
 #include <windows.h>
 
-
-
 #define MAX 100
 #define Length 1300
 #define Width 1000
@@ -21,6 +19,7 @@ bool check_provide_student_code = false;
 bool check_provide_email = false;
 FILE *p;
 struct first_and_last_name{
+	
     char first_name[25];
     char last_name[9];
 
@@ -57,12 +56,12 @@ void print_list_step1( SV student[] );
 void print_list_step2( SV sv ,int x );
 bool check_data( char data[] );  
 void output_file( SV student[] );
-void Read_in_file(SV student[]);
+void Read_in_file(SV student[]);		
 void Filter_the_data(char *p,char c);
 // method main
 int main(){
 	SV student[MAX];
-//	init();
+	init();
     mainloop(student);
 	
    
@@ -108,7 +107,7 @@ void showTextBackground(int x,int y,char *str,int color){
 void mainloop(SV student[]){
 	initwindow (800,600);
 	setbkcolor(7);
-	/*
+	
 	int x = 0;
 	char *s = new char[5];
 	PlaySound (TEXT ("start.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -123,7 +122,7 @@ void mainloop(SV student[]){
 		delay (20);
 		x++;
 	}
-	*/
+	
 	cleardevice();
 	while(true){
 		setbkcolor(0);
@@ -154,7 +153,7 @@ void mainloop(SV student[]){
 		        showText(220,270,"Enter Directly Info");
 		    }
 		    if (mousey() <= 270){
-		    	PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		        PlaySound (TEXT ("beep.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		    	showTextBackground(220,200,"Read From File",15);
 		    	Read_in_file(student);
 			}else {
@@ -323,16 +322,17 @@ void read_data_from_keyboard(char *p,int x,int y,int z,int w){
 	int m=0;
 	int r;
 	bool check=false;
+	bool check_full=false;
 	while(key!=13){
 			key= getch();
-			if(key==8){
+			if(key==8&&check_full==false){
 				p[m]='?';
 				m--;
 	            char b[51]={""};
 	            strncat(b,p,m+1);
 	            bar(x,y,z,w);
 	            outtextxy(x,y,b);
-	            
+	            if(p[0]=='?') check_full=true;
 			}
 			else str[0] = key;
 			if(key!=13&&key!=8){
@@ -342,6 +342,7 @@ void read_data_from_keyboard(char *p,int x,int y,int z,int w){
 				   check=true;
 				   r=i;
 				   if(i==strlen(p)-1) m=strlen(p)-1;
+				   check_full=false;
 				   break;
 			    }
 		    }
@@ -362,7 +363,6 @@ void read_data_from_keyboard(char *p,int x,int y,int z,int w){
 	   }
 	   
 	   }
-	
 	
 } 
 void add_students( SV student[]){
@@ -499,7 +499,7 @@ void print_list_step2( SV sv ,int x){
 bool check_data( char data[] ){
     if( data[0] >= '0' && data[0] <= '9' ) return true;
     return false;
-}   
+}
 void delete_student( SV student[] ){
     find_student( student );
     if( check_find ){
@@ -522,7 +522,7 @@ void delete_student( SV student[] ){
         cleardevice();
     }
     
-}    
+}
 bool Linear_Search( SV student[] , char data[] ){
     int i = 0;
     char name[50];
@@ -531,8 +531,10 @@ bool Linear_Search( SV student[] , char data[] ){
         strcpy( name , student[i].name.first_name );
         strcat( name , b );
         strcat( name , student[i].name.last_name );
+     
         while( i < total_number_of_students && stricmp(name,data) != 0 ) {
                  i++;
+                
             strcpy( name , student[i].name.first_name );
             strcat( name , b );
             strcat( name , student[i].name.last_name ); 
@@ -579,12 +581,7 @@ void find_student( SV student[] ){
     char data[50]={""};
     read_data_from_keyboard(data,400,50,750,75);
     Filter_the_data(data,63);
-    char name[60];
-    char b[2] = {' '};
-    strcpy( name , student[0].name.first_name );
-                strcat( name , b );
-                strcat( name , student[0].name.last_name );
-    printf("%d",strlen(data));
+
     if( check_sort ){
         check_find  = Binary_Search(student,data);
         
