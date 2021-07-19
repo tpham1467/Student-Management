@@ -568,6 +568,7 @@ bool Binary_Search( SV student[] , char data[] ){
                 else if ( stricmp(student[mid].student_code,data) < 0 )
                     left = mid + 1; 
             }
+           return false; 
     }else {
     	return Linear_Search(student,data);
     	
