@@ -41,9 +41,8 @@ void showTextBackground(int x,int y,char *str,int color);
 void mainloop(SV student[]);
 void add_students( SV student[] ); 
 void quickSort_first_name_step2( SV student[] , int low , int high );  
-int quickSort_first_name_step3( SV student[] , int low , int high );
+int partition( SV student[] , int low , int high,int flag );
 void quickSort_first_name_step1( SV student[] );
-int quickSort_last_name_step2( SV student[] , int low , int high );
 void quickSort_last_name_step1( SV student[] , int low , int high );
 void swap( SV &a , SV &b );  
 void delete_student( SV student[] ); 
@@ -533,8 +532,7 @@ bool Linear_Search( SV student[] , char data[] ){
         strcat( name , student[i].name.last_name );
      
         while( i < total_number_of_students && stricmp(name,data) != 0 ) {
-                 i++;
-                
+            i++;      
             strcpy( name , student[i].name.first_name );
             strcat( name , b );
             strcat( name , student[i].name.last_name ); 
@@ -543,13 +541,13 @@ bool Linear_Search( SV student[] , char data[] ){
     else {
         while( i < total_number_of_students && strcmp(student[i].student_code,data) != 0) i++;
     }
-    location_to_delete = i;
+ 
     if( i == total_number_of_students ) return false;
+    location_to_delete = i;
     return true;
 
 }
 bool Binary_Search( SV student[] , char data[] ){
-    char b[2] = {' '};
     int left = 0;
     int right = total_number_of_students - 1;
     int mid;
@@ -642,7 +640,7 @@ void swap(SV &a,SV &b){
     a = b;
     b = c;
 }
-int quickSort_last_name_step2( SV student[] , int low , int high )
+int partition( SV student[] , int low , int high ,int flag)
 {
     
     char pivot[10];
@@ -650,10 +648,18 @@ int quickSort_last_name_step2( SV student[] , int low , int high )
     int left = low;
     int right = high - 1;
     while(true){
-        while( left <= right && stricmp(pivot,student[left].name.last_name) > 0 )
+        if(flag==1){
+	        while( left <= right && stricmp(pivot,student[left].name.last_name) > 0 )
+	             left++;
+	        while(right >= left && stricmp(pivot,student[right].name.last_name) < 0)
+	             right--;
+         }
+         else {
+         	while( left <= right && stricmp( pivot, student[left].name.first_name ) > 0)
              left++;
-        while(right >= left && stricmp(pivot,student[right].name.last_name) < 0)
-             right--;
+	        while(right >= left && stricmp( pivot , student[right].name.first_name ) < 0)
+	             right--;
+	    }
         if (left >= right) break;
         swap( student[left] , student[right] );
         left++;
@@ -666,35 +672,14 @@ void quickSort_last_name_step1( SV student[] , int low , int high )
 {   
     if (low < high)
     {  
-        int pi = quickSort_last_name_step2( student, low, high);
+        int pi = partition( student, low, high,1);
         quickSort_last_name_step1( student , low , pi-1 );
         quickSort_last_name_step1( student , pi+1 , high );
     }
 }
-
-int quickSort_first_name_step3( SV student[] , int low , int high )
-{ 
-    char pivot[15];
-    strcpy( pivot, student[0].name.first_name );
-
-    int left = low;
-    int right = high - 1;
-    while(true){
-        while( left <= right && stricmp( pivot, student[left].name.first_name ) > 0)
-             left++;
-        while(right >= left && stricmp( pivot , student[right].name.first_name ) < 0)
-             right--;
-        if (left >= right) break;
-        swap(student[left], student[right]);
-        left++;
-        right--;
-    }
-    swap(student[left], student[high]);
-    return left;
-}
 void quickSort_first_name_step2(SV student[],int low,int high){
     if(low<high){
-        int pi=quickSort_first_name_step3(student,low,high);
+        int pi=partition(student,low,high,2);
         quickSort_first_name_step2(student,low,pi-1);
         quickSort_first_name_step2(student,pi+1,high);
     }
