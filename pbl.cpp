@@ -7,8 +7,8 @@
 #include <windows.h>
 
 #define MAX 100
-#define Length 1300
-#define Width 1000
+#define Length 1600
+#define Width 800
 
 bool check_find = false;
 int location_to_delete;
@@ -21,16 +21,16 @@ FILE *p;
 struct first_and_last_name{
 	
     char first_name[25];
-    char last_name[9];
+    char last_name[25];
 
 };
 struct student{    
     first_and_last_name name;
-    char gender[5];
+    char gender[10];
     char Date_of_birth[15];
     char address[50];
-    char student_code[10];
-    char email[25];
+    char student_code[20];
+    char email[35];
 };
 typedef  student SV;
 
@@ -40,10 +40,10 @@ void showTextBackground(int x,int y,char *str,int color);
 
 void mainloop(SV student[]);
 void add_students( SV student[] ); 
-void quickSort_first_name_step2( SV student[] , int low , int high );  
+void quickSort_last_name_step2( SV student[] , int low , int high );  
 int partition( SV student[] , int low , int high,int flag );
-void quickSort_first_name_step1( SV student[] );
-void quickSort_last_name_step1( SV student[] , int low , int high );
+void quickSort_last_name_step1( SV student[] );
+void quickSort_first_name_step1( SV student[] , int low , int high );
 void swap( SV &a , SV &b );  
 void delete_student( SV student[] ); 
 void find_student( SV student[] );
@@ -83,7 +83,11 @@ void init(){
 	outtextxy(430,200,">>Nguyen THi Minh Hy");
 	line(47,45,47,353);
 	line(48,353,1000,353);
-	delay(3000); 
+	outtextxy(550,600,"Press enter to continue");
+	char key=0;
+	 while(key!=13){
+         	key=getch();
+		 }
 	closegraph();
 	
 
@@ -100,10 +104,11 @@ void showTextBackground(int x,int y,char *str,int color){
 	int bk = getbkcolor();
 	setbkcolor(color-15);
 	outtextxy(x,y,str);
-	delay(100);
+	delay(50);
 	setbkcolor(bk);
 }
 void mainloop(SV student[]){
+	
 	initwindow (800,600);
 	setbkcolor(7);
 	
@@ -225,8 +230,8 @@ void mainloop(SV student[]){
 		       
 			}
 			else if(check_sort==false){
-				quickSort_last_name_step1(student,0,total_number_of_students-1);
-				quickSort_first_name_step1(student);
+				quickSort_first_name_step1(student,0,total_number_of_students-1);
+				quickSort_last_name_step1(student);
 				showTextBackground(250,200,"Sort Success",15);
 			    check_sort=true;
 			    
@@ -282,7 +287,7 @@ void mainloop(SV student[]){
 	     	}
 			else if(check_provide_student_code == false){
 				PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
-				showTextBackground(100,200,"No Student Code Yet",15);
+				showTextBackground(100,200,"	",15);
 				
 			}
 			else {
@@ -312,7 +317,18 @@ void Filter_the_data(char *p,char c){
 	for(int i=0;i<strlen(p);i++){
 	     if(p[i]==c) p[i]=' ';
 	}
-     
+	char string[70];
+	int key;
+	for(int i=strlen(p)-1;i>=0;i--){
+		if(p[i]!=' ') { key=i;
+		break; 
+			
+		}
+	}
+	if(key==strlen(p)-1) return;
+	strncpy(string,p,key+1);
+	strcpy(p,string);
+
 }
 void read_data_from_keyboard(char *p,int x,int y,int z,int w){
 	char str[2];
@@ -398,7 +414,7 @@ void add_students( SV student[]){
 	    while(!ismouseclick(WM_LBUTTONDOWN) || mousex() < 100   || mousey() < 400 || mousex() > 400){
 			showText(150,550,"Back");
             showText(300,550,"Add");
-            printf("1");
+            
 	   }
 	   if(mousex()<=275){
 	   	showTextBackground(150,550,"Back",15);
@@ -412,14 +428,21 @@ void add_students( SV student[]){
 	   	
 	   }
 	    
-	   delay(500);
+	   delay(300);
 	   cleardevice();
 	
 	
   
 }
 void Read_in_file(SV student[]){
-    p=fopen("input.txt","r");
+	cleardevice();
+	settextstyle(1,0,3);
+    showText(10,50,"Enter File Name:");
+	bar(300,50,750,75);
+    char data[50]={""};
+    read_data_from_keyboard(data,300,50,750,75);
+    Filter_the_data(data,63);
+	p=fopen(data,"r");
     cleardevice();
     if(p==NULL) {
     	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -432,7 +455,7 @@ void Read_in_file(SV student[]){
 	    char d[50];
         char ns[50];
         int n=total_number_of_students;
-        while( fscanf(p, "First_Name: %s Last_Name:%s Gender: %s Date_of_birth: %s Address: %s\n", student[n].name.first_name,student[n].name.last_name,student[n].gender,student[n].Date_of_birth,student[n].address) != EOF ){
+        while( fscanf(p, "Last_Name: %s First_Name:%s Gender: %s Date_of_birth: %s Address: %s\n", student[n].name.last_name,student[n].name.first_name,student[n].gender,student[n].Date_of_birth,student[n].address) != EOF ){
 		    Filter_the_data(student[n].name.first_name,95);
 		    Filter_the_data(student[n].name.last_name,95);
 		    Filter_the_data(student[n].address,95);
@@ -442,7 +465,7 @@ void Read_in_file(SV student[]){
         showTextBackground(250,200,"Read Successfully",15);
         fclose(p);
     }
-    delay(500);
+    delay(400);
 } 
 void print_list_step1(SV student[]){
 	setbkcolor(0);
@@ -464,6 +487,7 @@ void print_list_step1(SV student[]){
    	outtextxy(840,7,"Dia Chi");
    	outtextxy(1110,7,"Ma Sinh Vien");
    	outtextxy(1280,7,"Email");
+   	outtextxy(550,30+25*(total_number_of_students)+40,"Press enter to continue");
    	int x=5;
    	char s[5]={""};
     for(int i = 0 ; i < total_number_of_students ; i++ ){
@@ -485,9 +509,9 @@ void print_list_step1(SV student[]){
 void print_list_step2( SV sv ,int x){
 	 char name[50]={""};
 	 char b[2] = {' '};
-	 strcpy( name , sv.name.first_name );
+	 strcpy( name , sv.name.last_name );
      strcat( name , b );
-     strcat( name , sv.name.last_name );
+     strcat( name , sv.name.first_name );
      outtextxy(70,x+25+2,name);
      outtextxy(415,x+25+2,sv.gender);
      outtextxy(550,x+25+2,sv.Date_of_birth);
@@ -499,6 +523,7 @@ bool check_data( char data[] ){
     if( data[0] >= '0' && data[0] <= '9' ) return true;
     return false;
 }
+
 void delete_student( SV student[] ){
     find_student( student );
     if( check_find ){
@@ -527,15 +552,15 @@ bool Linear_Search( SV student[] , char data[] ){
     char name[50];
     char b[2] = {' '};
     if( check_data(data) == false ){ 
-        strcpy( name , student[i].name.first_name );
+        strcpy( name , student[i].name.last_name );
         strcat( name , b );
-        strcat( name , student[i].name.last_name );
+        strcat( name , student[i].name.first_name );
      
         while( i < total_number_of_students && stricmp(name,data) != 0 ) {
             i++;      
-            strcpy( name , student[i].name.first_name );
+            strcpy( name , student[i].name.last_name );
             strcat( name , b );
-            strcat( name , student[i].name.last_name ); 
+            strcat( name , student[i].name.first_name ); 
         }
     }
     else {
@@ -580,7 +605,6 @@ void find_student( SV student[] ){
     char data[50]={""};
     read_data_from_keyboard(data,400,50,750,75);
     Filter_the_data(data,63);
-
     if( check_sort ){
         check_find  = Binary_Search(student,data);
         
@@ -595,18 +619,15 @@ void find_student( SV student[] ){
     if(check_find == false){
     	PlaySound (TEXT ("error.wav"), NULL, SND_FILENAME | SND_ASYNC);
          showText(280,200,"Not Find");
-         char key=0;
-         while(key!=13){
-         	key=getch();
-		 }
+         delay(250);
     }
     else {
     	cleardevice();
     	char b[2] = {' '};
     	char name[50]={""};
-    	strcpy( name , student[location_to_delete].name.first_name );
+    	strcpy( name , student[location_to_delete].name.last_name );
         strcat( name , b );
-        strcat( name , student[location_to_delete].name.last_name );
+        strcat( name , student[location_to_delete].name.first_name );
     	settextstyle(1,0,2);
     	char key=0;
     	showText(10,2,"Name:");
@@ -617,10 +638,11 @@ void find_student( SV student[] ){
     	showText(200,200,student[location_to_delete].Date_of_birth);
     	showText(10,300,"Address:");
     	showText(135,300,student[location_to_delete].address);
-    	showText(10,400,"Sudent code:");
-    	showText(160,400,student[location_to_delete].student_code);
+    	showText(10,400,"Student code:");
+    	showText(200,400,student[location_to_delete].student_code);
     	showText(10,500,"Email:");
-    	showText(150,500,student[location_to_delete].email);
+    	showText(100,500,student[location_to_delete].email);
+    	showText(200,550,"Press enter to continue");
          while(key!=13){
          	key=getch();
 		 }
@@ -644,7 +666,9 @@ int partition( SV student[] , int low , int high ,int flag)
 {
     
     char pivot[10];
+    if(flag==1)
     strcpy( pivot, student[high].name.last_name ) ;
+    else strcpy( pivot, student[high].name.first_name ) ;
     int left = low;
     int right = high - 1;
     while(true){
@@ -668,65 +692,42 @@ int partition( SV student[] , int low , int high ,int flag)
     swap( student[left] , student[high] );
     return left;
 }
-void quickSort_last_name_step1( SV student[] , int low , int high )
+void quickSort_first_name_step1( SV student[] , int low , int high )
 {   
     if (low < high)
     {  
-        int pi = partition( student, low, high,1);
-        quickSort_last_name_step1( student , low , pi-1 );
-        quickSort_last_name_step1( student , pi+1 , high );
+        int pi = partition( student, low, high,0);
+        quickSort_first_name_step1( student , low , pi-1 );
+        quickSort_first_name_step1( student , pi+1 , high );
     }
 }
-void quickSort_first_name_step2(SV student[],int low,int high){
+void quickSort_last_name_step2(SV student[],int low,int high){
     if(low<high){
-        int pi=partition(student,low,high,2);
-        quickSort_first_name_step2(student,low,pi-1);
-        quickSort_first_name_step2(student,pi+1,high);
+        int pi=partition(student,low,high,1);
+        quickSort_last_name_step2(student,low,pi-1);
+        quickSort_last_name_step2(student,pi+1,high);
     }
 }
-void quickSort_first_name_step1(SV student[]){
+void quickSort_last_name_step1(SV student[]){
     int bien_trung_gian=0;
-    char lastname[10];
-    strcpy(lastname,student[0].name.last_name);
+    char firstname[10];
+    strcpy(firstname,student[0].name.first_name);
     for(int i = 1 ; i < total_number_of_students ; i++){
-        if( stricmp(lastname,student[i].name.last_name) != 0 || i == total_number_of_students-1 )
+        if( stricmp(firstname,student[i].name.first_name) != 0 || i == total_number_of_students-1 )
         {
-            quickSort_first_name_step2(student,bien_trung_gian,i-1);
+            quickSort_last_name_step2(student,bien_trung_gian,i-1);
             bien_trung_gian = i;  
-            strcpy(lastname,student[i].name.last_name);
+            strcpy(firstname,student[i].name.first_name);
         }
 
 
     }
 }
 void provide_student_code(SV student[]){
+	int key=1022000;
     for(int i=0;i<total_number_of_students;i++){
-        student[i].student_code[0]='1';
-        student[i].student_code[1]='0';
-        student[i].student_code[2]='0';
-        student[i].student_code[3]='2';
-        student[i].student_code[4]='2';
-        char m='0';
-        if(i<10){
-            student[i].student_code[5]='0';
-            student[i].student_code[6]='0';
-
-            student[i].student_code[7]=m+i;
-        }
-        else if(i!=100&&i>=10) {
-             student[i].student_code[5]=0;
-             int z=i%10;
-             student[i].student_code[6]=m+z;
-             m=m-z;
-             i=i/10;
-             student[i].student_code[7]=m+i;
-
-        }
-        else {
-            student[i].student_code[5]='1';
-            student[i].student_code[6]='0';
-            student[i].student_code[7]='0';
-        }
+          itoa(key,student[i].student_code,10);
+          key++;
     }
 
 }
@@ -762,9 +763,9 @@ void output_file(SV student[]){
              fprintf(fp,"%c%2s%-3d%c",'|',"  ",i,'|');
              char name[34];
 		     char b[2] = {' '};
-		     strcpy( name , student[i].name.first_name );
+		     strcpy( name , student[i].name.last_name );
 		     strcat( name , b );
-		     strcat( name ,student[i].name.last_name );
+		     strcat( name ,student[i].name.first_name );
              fprintf(fp,"%-33s%c",name,'|');
              fprintf(fp,"%-9s%c",student[i].gender,'|');
              fprintf(fp,"%-12s%c",student[i].Date_of_birth,'|');
